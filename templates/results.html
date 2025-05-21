@@ -13,6 +13,33 @@
     <div class="container">
         {% set max_comp = earnings|map(attribute='1')|max %}
         {% set min_comp = earnings|map(attribute='1')|min %}
+        
+        <div class="dashboard-grid">
+          <div class="dashboard-card total-drivers">
+            <div class="card-icon">👥</div>
+            <div class="card-value">{{ assignments|length }}</div>
+            <div class="card-label">Total Drivers</div>
+          </div>
+          
+          <div class="dashboard-card total-trips">
+            <div class="card-icon">🚗</div>
+            <div class="card-value">{{ total_trips }}</div>
+            <div class="card-label">Total Trips</div>
+          </div>
+          
+          <div class="dashboard-card total-comp">
+            <div class="card-icon">💵</div>
+            <div class="card-value">₱{{ '%.2f'|format(total_comp) }}</div>
+            <div class="card-label">Total Compensation</div>
+          </div>
+          
+          <div class="dashboard-card avg-comp">
+            <div class="card-icon">📊</div>
+            <div class="card-value">₱{{ '%.2f'|format(avg_comp) }}</div>
+            <div class="card-label">Average Compensation</div>
+          </div>
+        </div>
+        
         <div class="summary">
             <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
                 <strong>Total Drivers:</strong> {{ assignments|length }}</span>

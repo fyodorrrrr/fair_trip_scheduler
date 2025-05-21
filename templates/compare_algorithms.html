@@ -52,6 +52,34 @@
             </table>
         </div>
         
+        <div class="algorithm-cards">
+            {% for alg in algorithms %}
+            <div class="algorithm-card">
+                <div class="card-header {{ alg }}">
+                    <h3>{{ alg|capitalize }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="metric">
+                        <span class="metric-label">Min:</span>
+                        <span class="metric-value">₱{{ metrics.min_comp[loop.index0]|round(2) }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Max:</span>
+                        <span class="metric-value">₱{{ metrics.max_comp[loop.index0]|round(2) }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Avg:</span>
+                        <span class="metric-value">₱{{ metrics.avg_comp[loop.index0]|round(2) }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Std Dev:</span>
+                        <span class="metric-value">₱{{ metrics.std_dev[loop.index0]|round(2) }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
         <div class="chart-container">
             <canvas id="comparisonChart"></canvas>
         </div>
