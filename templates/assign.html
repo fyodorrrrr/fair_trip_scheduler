@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Trip - {{ driver.name }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Assign Trip to {{ driver.name }}</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="Enter trip location" required>
+            </div>
+            <div class="form-group">
+                <label for="compensation">Compensation</label>
+                <input type="text" id="compensation" name="compensation" placeholder="e.g. 12.50" required autocomplete="off">
+            </div>
+            {% if error %}
+            <div style="color:#c0392b; margin-bottom:10px;">{{ error }}</div>
+            {% endif %}
+            <button type="submit">Confirm Assignment</button>
+        </form>
+        <div class="back-button">
+            <a href="/" style="text-decoration:none;"><button type="button">Back</button></a>
+        </div>
+    </div>
+</body>
+</html>

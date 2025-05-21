@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fair Trip Scheduler</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Fair Trip Assignment</h2>
+        <form action="/assign" method="post">
+            <div class="form-group">
+                <label for="drivers">Drivers</label>
+                <input type="text" id="drivers" name="drivers" placeholder="e.g. John, Sarah, Michael" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="trips">Trip Values</label>
+                <input type="text" id="trips" name="trips" placeholder="e.g. 12.50, 8.75, 15.30, 9.00" required>
+            </div>
+            
+            <button type="submit">Generate Assignment</button>
+        </form>
+    </div>
+</body>
+</html>
