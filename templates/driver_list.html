@@ -42,9 +42,9 @@
         </div>
 
         <div class="filters">
-            <div class="search-box">
-                <input type="text" id="driver-search" placeholder="Search drivers...">
-                <button type="button" onclick="searchDrivers()">Search</button>
+            <div class="search-container">
+                <input type="text" id="driver-search" placeholder="Search for a driver...">
+                <button onclick="searchDrivers()">Search</button>
             </div>
             <div class="filter-options">
                 <label for="comp-filter">Filter by compensation:</label>
@@ -62,13 +62,15 @@
                 <tr>
                     <th>Name</th>
                     <th>Total Compensation</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for driver in drivers %}
                 <tr>
-                    <td>{{ driver['name'] }}</td>
+                    <td><a href="/assign/{{ driver['name'] }}">{{ driver['name'] }}</a></td>
                     <td class="comp-cell" data-driver="{{ driver['name'] }}">₱{{ '%.2f'|format(driver['compensation']) }}</td>
+                    <td><a href="/assign/{{ driver['name'] }}" class="assign-btn">Assign Trip</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

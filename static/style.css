@@ -592,3 +592,44 @@ button:hover {
         margin-bottom: 10px;
     }
 }
+
+/* New styles for chart section */
+.chart-section {
+    margin: 30px 0;
+}
+
+.chart-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    height: 300px;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 250px;
+    }
+}
+
+/* New styles for assign button and search container */
+.assign-btn {
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+#driver-search {
+    padding: 8px 12px;
+    width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}

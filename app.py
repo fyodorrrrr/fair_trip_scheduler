@@ -84,14 +84,25 @@ def assign_auto():
 
 
 @app.route('/assign/<driver_name>', methods=['GET', 'POST'])
-def assign_driver(driver_name: str):
-    """Assign a trip to the driver with the lowest compensation (greedy)."""
+def assign_driver(driver_name):
     drivers = get_drivers()
-    min_comp = min(driver['compensation'] for driver in drivers)
-    driver = next((d for d in drivers if d['compensation'] == min_comp), None)
+    
+    # Find the driver
+    driver = next((d for d in drivers if d['name'] == driver_name), None)
     if not driver:
-        flash('Driver not found.', 'danger')
         return redirect(url_for('index'))
+    
+    # Calculate statistics for visualization
+    compensations = [d['compensation'] for d in drivers]
+    avg_compensation = sum(compensations) / len(compensations)
+    max_compensation = max(compensations)
+    min_compensation = min(compensations)
+    
+    # Determine rank
+    sorted_drivers = sorted(drivers, key=lambda d: d['compensation'])
+    rank = sorted_drivers.index(driver) + 1
+    total_drivers = len(drivers)
+    
     if request.method == 'POST':
         location = request.form['location']
         try:
@@ -111,7 +122,14 @@ def assign_driver(driver_name: str):
         total_comp = sum(earnings.values())
         avg_comp = total_comp / total_drivers if total_drivers else 0
         return render_template('results.html', assignments=assignments, earnings=earnings, total_drivers=total_drivers, total_trips=total_trips, total_comp=total_comp, avg_comp=avg_comp)
-    return render_template('assign.html', driver=driver)
+    
+    return render_template('assign.html', 
+                          driver=driver, 
+                          rank=rank,
+                          total_drivers=total_drivers,
+                          avg_compensation=avg_compensation,
+                          max_compensation=max_compensation,
+                          min_compensation=min_compensation)
 
 
 @app.route('/reset')
@@ -142,7 +160,7 @@ def algorithm_demo():
     algorithm_steps = [
         "Start with a list of drivers and their current compensation",
         "Find the driver with the minimum total compensation",
-        f"Select driver '{driver_names[min_idx]}' with compensation ${compensations[min_idx]:.2f}",
+        f"Select driver '{driver_names[min_idx]}' with compensation ₱{compensations[min_idx]:.2f}",
         "Assign the new trip to this driver",
         "Update the driver's compensation total",
         "Repeat for the next trip assignment"

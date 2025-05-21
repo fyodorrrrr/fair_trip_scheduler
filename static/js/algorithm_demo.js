@@ -23,13 +23,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Compensation ($)'
+                        text: 'Compensation (₱)'  // Update with peso sign
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value;  // Add peso sign to tick marks
+                        }
                     }
                 },
                 x: {
                     title: {
                         display: true,
                         text: 'Drivers'
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Compensation: ₱' + context.parsed.y;  // Add peso sign to tooltips
+                        }
                     }
                 }
             }

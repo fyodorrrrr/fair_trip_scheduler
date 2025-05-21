@@ -27,25 +27,25 @@
                     <tr>
                         <td>Minimum Compensation</td>
                         {% for value in metrics.min_comp|default([]) %}
-                        <td>${{ value|round(2) }}</td>
+                        <td>₱{{ value|round(2) }}</td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Maximum Compensation</td>
                         {% for value in metrics.max_comp|default([]) %}
-                        <td>${{ value|round(2) }}</td>
+                        <td>₱{{ value|round(2) }}</td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Average Compensation</td>
                         {% for value in metrics.avg_comp|default([]) %}
-                        <td>${{ value|round(2) }}</td>
+                        <td>₱{{ value|round(2) }}</td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Standard Deviation</td>
                         {% for value in metrics.std_dev|default([]) %}
-                        <td>${{ value|round(2) }}</td>
+                        <td>₱{{ value|round(2) }}</td>
                         {% endfor %}
                     </tr>
                 </tbody>

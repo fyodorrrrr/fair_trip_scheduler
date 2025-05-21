@@ -6,7 +6,9 @@
     <title>Assign Trip - {{ driver.name }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/assign.js"></script>
+    <script src="/static/js/driver_charts.js"></script>
 </head>
 <body>
     <div class="container">
@@ -83,6 +85,37 @@
             <p class="no-trips">No previous trips</p>
             {% endif %}
         </div>
+
+        <!-- Driver Visualization Section -->
+        <div class="chart-section">
+            <h3>Compensation Visualization</h3>
+            <div class="chart-container">
+                <canvas id="compensationChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Hidden chart data -->
+        <script id="chart-data" type="application/json">
+            {
+                "labels": ["This Driver", "Average", "Highest", "Lowest"],
+                "values": [
+                    {{ driver.compensation }},
+                    {{ avg_compensation }},
+                    {{ max_compensation }},
+                    {{ min_compensation }}
+                ],
+                "colors": [
+                    {% if driver.compensation < avg_compensation %}
+                    "#2ecc71",
+                    {% else %}
+                    "#e74c3c",
+                    {% endif %}
+                    "#3498db",
+                    "#e74c3c",
+                    "#2ecc71"
+                ]
+            }
+        </script>
     </div>
 </body>
 </html>

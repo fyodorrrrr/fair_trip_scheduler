@@ -15,7 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Value ($)'
+                        text: 'Value (₱)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value;
+                        }
                     }
                 }
             }
