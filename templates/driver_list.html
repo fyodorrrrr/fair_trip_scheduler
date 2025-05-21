@@ -7,11 +7,56 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
+<body>    
     <div class="container">
         <h2>Driver List</h2>
         <div class="notification-area">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </div>
+        
+        <div class="algorithm-nav">
+            <a href="/algorithm-demo" class="btn">Algorithm Demo</a>
+            <a href="/compare-algorithms" class="btn">Compare Algorithms</a>
+            <a href="/about-algorithm" class="btn">About Greedy Algorithm</a>
+        </div>
+
+        <div class="driver-stats">
+            <div class="stat-card">
+                <div class="stat-value">{{ drivers|length }}</div>
+                <div class="stat-label">Total Drivers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">₱{{ '%.2f'|format(drivers|map(attribute='compensation')|sum) }}</div>
+                <div class="stat-label">Total Compensation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">₱{{ '%.2f'|format((drivers|map(attribute='compensation')|sum / (drivers|length if drivers|length > 0 else 1))) }}</div>
+                <div class="stat-label">Average Compensation</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <input type="text" id="driver-search" placeholder="Search drivers...">
+                <button type="button" onclick="searchDrivers()">Search</button>
+            </div>
+            <div class="filter-options">
+                <label for="comp-filter">Filter by compensation:</label>
+                <select id="comp-filter" onchange="filterDrivers()">
+                    <option value="all">All</option>
+                    <option value="low">Low (&lt; ₱50)</option>
+                    <option value="medium">Medium (₱50-₱100)</option>
+                    <option value="high">High (&gt; ₱100)</option>
+                </select>
+            </div>
+        </div>
+        
         <table class="result-table" id="drivers-table">
             <thead>
                 <tr>
@@ -28,6 +73,23 @@
                 {% endfor %}
             </tbody>
         </table>
+        
+        <div class="pagination-controls">
+            <div class="per-page">
+                <label for="per-page">Drivers per page:</label>
+                <select id="per-page" onchange="changePerPage(this.value)">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <div class="page-numbers">
+                <button type="button" onclick="previousPage()" class="page-btn">&laquo; Previous</button>
+                <span id="current-page">Page 1 of 1</span>
+                <button type="button" onclick="nextPage()" class="page-btn">Next &raquo;</button>
+            </div>
+        </div>
     </div>
     <div class="assign-fab">
         <form action="/assign" method="get">
@@ -41,15 +103,6 @@
             </button>
         </form>
     </div>
-    <script>
-      // For demo: update compensation every second with a random value
-      setInterval(function() {
-        document.querySelectorAll('.comp-cell').forEach(function(cell) {
-          // Generate a random float between 0 and 500 for demo
-          var newVal = (Math.random() * 500).toFixed(2);
-          cell.textContent = '₱' + newVal;
-        });
-      }, 1000);
-    </script>
+    <script src="/static/js/driver_list.js"></script>
 </body>
 </html>

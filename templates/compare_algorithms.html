@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm Comparison</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/algorithm_comparison.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Algorithm Comparison</h1>
+        
+        <div class="comparison-summary">
+            <h2>Performance Metrics</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        {% for alg in algorithms|default([]) %}
+                        <th>{{ alg|capitalize }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Minimum Compensation</td>
+                        {% for value in metrics.min_comp|default([]) %}
+                        <td>${{ value|round(2) }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Maximum Compensation</td>
+                        {% for value in metrics.max_comp|default([]) %}
+                        <td>${{ value|round(2) }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Average Compensation</td>
+                        {% for value in metrics.avg_comp|default([]) %}
+                        <td>${{ value|round(2) }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Standard Deviation</td>
+                        {% for value in metrics.std_dev|default([]) %}
+                        <td>${{ value|round(2) }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+        
+        <div class="conclusion">
+            <h2>Conclusion</h2>
+            <p>
+                The greedy algorithm consistently produces the most balanced compensation distribution,
+                with the lowest standard deviation and smallest gap between minimum and maximum earnings.
+                Random assignment, as expected, leads to the most uneven distribution, while round-robin
+                performs somewhere in between.
+            </p>
+        </div>
+
+        <div class="navigation">
+            <a href="/" class="btn">Back to Driver List</a>
+            <a href="/algorithm-demo" class="btn">Algorithm Demo</a>
+            <a href="/about-algorithm" class="btn">About the Algorithm</a>
+        </div>
+    </div>
+    
+    <!-- Hidden element to store chart data -->
+    <script id="chart-data" type="application/json">
+        {
+            "labels": ["Min Compensation", "Max Compensation", "Avg Compensation", "Std Deviation"],
+            "datasets": [
+                {% for alg in algorithms|default([]) %}
+                {
+                    "label": {{ alg|capitalize|tojson }},
+                    "data": [
+                        {{ metrics.min_comp[loop.index0]|default(0)|float }},
+                        {{ metrics.max_comp[loop.index0]|default(0)|float }},
+                        {{ metrics.avg_comp[loop.index0]|default(0)|float }},
+                        {{ metrics.std_dev[loop.index0]|default(0)|float }}
+                    ],
+                    "backgroundColor": {{ ["#3498db", "#e74c3c", "#2ecc71"][loop.index0]|tojson }},
+                    "borderWidth": 1
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }
+    </script>
+</body>
+</html>
