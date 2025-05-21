@@ -6,45 +6,59 @@
     <title>Assign Trip - {{ driver.name }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/css/assign.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/assign.js"></script>
-    <script src="/static/js/driver_charts.js"></script>
 </head>
 <body>
     <div class="container">
-        <h2>Assign Trip to {{ driver.name }}</h2>
+        <div class="page-header">
+            <h2>Assign Trip</h2>
+            <div class="driver-badge">{{ driver.name }}</div>
+        </div>
         
         <!-- Driver Information Card -->
         <div class="driver-info-card">
             <div class="driver-detail">
-                <span class="label">Current Compensation:</span>
-                <span class="value">₱{{ '%.2f'|format(driver.compensation) }}</span>
+                <span class="label">Current Compensation</span>
+                <span id="driver-compensation" class="value" data-value="{{ driver.compensation }}">₱{{ '%.2f'|format(driver.compensation) }}</span>
             </div>
             <div class="driver-detail">
-                <span class="label">Trip Count:</span>
+                <span class="label">Trip Count</span>
                 <span class="value">{{ driver.trips|length }}</span>
             </div>
             <div class="driver-detail">
-                <span class="label">Rank:</span>
+                <span class="label">Rank</span>
                 <span class="value">{{ rank }} of {{ total_drivers }}</span>
             </div>
         </div>
 
         <!-- Assignment Form -->
-        <form method="post">
+        <form method="post" id="assignment-form">
             <div class="form-group">
                 <label for="location">
                     <i class="icon">📍</i> Location
                 </label>
                 <input type="text" id="location" name="location" placeholder="Enter trip location" required>
             </div>
+            
             <div class="form-group">
                 <label for="compensation">
                     <i class="icon">💰</i> Compensation (₱)
                 </label>
-                <input type="number" id="compensation" name="compensation" placeholder="e.g. 12.50" 
-                       step="0.01" min="0.01" required autocomplete="off">
+                <input type="number" 
+                       id="compensation" 
+                       name="compensation" 
+                       placeholder="e.g. 12.50" 
+                       step="0.01" 
+                       min="0" 
+                       max="1000" 
+                       required 
+                       autocomplete="off">
+                <div class="helper-text">Enter a value between 0 and 1000</div>
+                <div id="compensation-preview" class="compensation-preview"></div>
             </div>
+            
             <div class="form-group">
                 <label for="trip_type">
                     <i class="icon">🚖</i> Trip Type
@@ -54,7 +68,13 @@
                     <option value="premium">Premium</option>
                     <option value="express">Express</option>
                 </select>
+                <div class="trip-type-preview">
+                    <span class="trip-badge standard">Standard: Regular trip</span>
+                    <span class="trip-badge premium">Premium: Higher value</span>
+                    <span class="trip-badge express">Express: Urgent delivery</span>
+                </div>
             </div>
+            
             {% if error %}
             <div class="error-message">{{ error }}</div>
             {% endif %}
@@ -122,6 +142,12 @@
                 ]
             }
         </script>
+    </div>
+    
+    <!-- Loading spinner for form submission -->
+    <div class="loading-spinner" id="loading">
+        <div class="spinner"></div>
+        <p>Processing...</p>
     </div>
 </body>
 </html>

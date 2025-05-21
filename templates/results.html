@@ -14,43 +14,43 @@
         {% set max_comp = earnings|map(attribute='1')|max %}
         {% set min_comp = earnings|map(attribute='1')|min %}
         
-        <div class="dashboard-grid">
-          <div class="dashboard-card total-drivers">
-            <div class="card-icon">👥</div>
-            <div class="card-value">{{ assignments|length }}</div>
-            <div class="card-label">Total Drivers</div>
-          </div>
-          
-          <div class="dashboard-card total-trips">
-            <div class="card-icon">🚗</div>
-            <div class="card-value">{{ total_trips }}</div>
-            <div class="card-label">Total Trips</div>
-          </div>
-          
-          <div class="dashboard-card total-comp">
-            <div class="card-icon">💵</div>
-            <div class="card-value">₱{{ '%.2f'|format(total_comp) }}</div>
-            <div class="card-label">Total Compensation</div>
-          </div>
-          
-          <div class="dashboard-card avg-comp">
-            <div class="card-icon">📊</div>
-            <div class="card-value">₱{{ '%.2f'|format(avg_comp) }}</div>
-            <div class="card-label">Average Compensation</div>
-          </div>
+        <div class="page-header">
+            <h1>Assignment Results</h1>
+            <p class="subtitle">Trip distribution and compensation overview</p>
         </div>
         
-        <div class="summary">
-            <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                <strong>Total Drivers:</strong> {{ assignments|length }}</span>
-            <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><path d="M8 17l4 4 4-4m-4-5v9"/></svg>
-                <strong>Total Trips:</strong> {{ total_trips }}</span>
-            <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M5 5h14v14H5z"/></svg>
-                <strong>Total Compensation:</strong> ₱{{ '%.2f'|format(total_comp) }}</span>
+        <div class="dashboard-grid">
+            <div class="dashboard-card total-drivers">
+                <div class="card-icon">👥</div>
+                <div class="card-value">{{ assignments|length }}</div>
+                <div class="card-label">Total Drivers</div>
+            </div>
+            
+            <div class="dashboard-card total-trips">
+                <div class="card-icon">🚗</div>
+                <div class="card-value">{{ total_trips }}</div>
+                <div class="card-label">Total Trips</div>
+            </div>
+            
+            <div class="dashboard-card total-comp">
+                <div class="card-icon">💵</div>
+                <div class="card-value">₱{{ '%.2f'|format(total_comp) }}</div>
+                <div class="card-label">Total Compensation</div>
+            </div>
+            
+            <div class="dashboard-card avg-comp">
+                <div class="card-icon">📊</div>
+                <div class="card-value">₱{{ '%.2f'|format(avg_comp) }}</div>
+                <div class="card-label">Average Compensation</div>
+            </div>
         </div>
         
         <div class="chart-container">
             <canvas id="compensationChart"></canvas>
+        </div>
+        
+        <div class="section-header">
+            <h2>Driver Assignment Details</h2>
         </div>
         
         <div class="controls-container">
@@ -69,7 +69,7 @@
             </div>
         </div>
         
-        <div style="overflow-x:auto;">
+        <div class="table-container">
             <table class="result-table" id="results-table">
                 <thead>
                     <tr>
@@ -90,7 +90,7 @@
                                     {% if trip.compensation is defined %}(₱{{ '%.2f'|format(trip.compensation) }}){% endif %}
                                 </span>
                             {% else %}
-                                <span style="color:#aaa;">None</span>
+                                <span class="no-trips">None</span>
                             {% endfor %}
                         </td>
                         <td class="comp-cell">₱{{ '%.2f'|format(comp) }}</td>
@@ -102,10 +102,13 @@
         
         <div class="pagination" id="pagination"></div>
         
-        <div class="back-button" style="margin-top:32px;">
-            <a href="/" style="text-decoration:none;">
-                <button type="button" style="background:#333;color:#fff;padding:12px 28px;border-radius:6px;font-size:1rem;box-shadow:0 2px 8px rgba(44,62,80,0.08);border:none;cursor:pointer;">
-                    ← Back to Assignment
+        <div class="back-button">
+            <a href="/">
+                <button type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Assignment
                 </button>
             </a>
         </div>
@@ -118,6 +121,7 @@
          style="display:none;"></div>
 
     <!-- Include the external JavaScript file -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script src="/static/js/results.js"></script>
 </body>
 </html>

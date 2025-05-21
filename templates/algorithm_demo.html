@@ -25,6 +25,28 @@
             <canvas id="compensationChart"></canvas>
         </div>
 
+        <div class="chart-actions">
+            <button id="export-png" class="btn btn-sm">
+                <i class="icon">📥</i> Save as Image
+            </button>
+            <button id="export-csv" class="btn btn-sm">
+                <i class="icon">📊</i> Export Data
+            </button>
+        </div>
+
+        <div class="chart-help-tooltip" id="chart-help">
+            <div class="tooltip-icon">?</div>
+            <div class="tooltip-content">
+                <h4>Chart Interactions</h4>
+                <ul>
+                    <li><strong>Click</strong> on a bar to highlight driver details</li>
+                    <li><strong>Hover</strong> over bars to see exact values</li>
+                    <li>Use <strong>Export</strong> buttons to save chart or data</li>
+                </ul>
+                <button id="close-help" class="btn-sm">Got it</button>
+            </div>
+        </div>
+
         <div class="navigation">
             <a href="/" class="btn">Back to Driver List</a>
             <a href="/compare-algorithms" class="btn">Compare Algorithms</a>
