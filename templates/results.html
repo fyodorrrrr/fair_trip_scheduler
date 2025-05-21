@@ -6,106 +6,122 @@
     <title>Assignment Results</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="/static/style.css">
-    <style>
-      .trip-badge {
-        display: inline-block;
-        background: #e3f2fd;
-        color: #1565c0;
-        border-radius: 12px;
-        padding: 4px 10px;
-        margin: 2px 2px 2px 0;
-        font-size: 0.95em;
-        font-weight: 500;
-      }
-      .top-earner {
-        background: #e8f5e9 !important;
-      }
-      .low-earner {
-        background: #fff3e0 !important;
-      }
-      .summary {
-        margin-bottom: 18px;
-        padding: 12px 18px;
-        background: #f8fafc;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(44,62,80,0.04);
-        font-size: 1.08em;
-        color: #333;
-        display: flex;
-        gap: 24px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .summary-icon {
-        vertical-align: middle;
-        margin-right: 6px;
-        opacity: 0.7;
-      }
-      .result-table th, .result-table td {
-        vertical-align: middle;
-      }
-      .result-table tbody tr:nth-child(even) {
-        background: #f9f9f9;
-      }
-      .result-table tbody tr:hover {
-        background: #eaf6ff;
-      }
-      @media (max-width: 600px) {
-        .summary { font-size: 0.98em; padding: 8px 6px; flex-direction: column; gap: 8px;}
-        .container { padding: 10px; }
-        .result-table th, .result-table td { padding: 8px; }
-      }
-    </style>
+    <link rel="stylesheet" href="/static/css/results.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         {% set max_comp = earnings|map(attribute='1')|max %}
         {% set min_comp = earnings|map(attribute='1')|min %}
-        <div class="summary">
-            <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                <strong>Total Drivers:</strong> {{ assignments|length }}</span>
-            <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><path d="M8 17l4 4 4-4m-4-5v9"/></svg>
-                <strong>Total Trips:</strong> {{ total_trips }}</span>
-            <span><svg class="summary-icon" width="18" height="18" fill="none" stroke="#333" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M5 5h14v14H5z"/></svg>
-                <strong>Total Compensation:</strong> ₱{{ '%.2f'|format(total_comp) }}</span>
+        
+        <div class="page-header">
+            <h1>Assignment Results</h1>
+            <p class="subtitle">Trip distribution and compensation overview</p>
         </div>
-        <div style="overflow-x:auto;">
-        <table class="result-table">
-            <thead>
-                <tr>
-                    <th scope="col">Driver</th>
-                    <th scope="col">Assigned Trips</th>
-                    <th scope="col">Total Compensation</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for driver, trips in assignments.items() %}
-                {% set comp = earnings[driver] %}
-                <tr class="{% if comp == max_comp %}top-earner{% elif comp == min_comp %}low-earner{% endif %}">
-                    <th scope="row">{{ driver }}</th>
-                    <td>
-                        {% for trip in trips %}
-                            <span class="trip-badge">
-                                {{ trip.location if trip.location is defined else trip }}
-                                {% if trip.compensation is defined %}(₱{{ '%.2f'|format(trip.compensation) }}){% endif %}
-                            </span>
-                        {% else %}
-                            <span style="color:#aaa;">None</span>
-                        {% endfor %}
-                    </td>
-                    <td>₱{{ '%.2f'|format(comp) }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card total-drivers">
+                <div class="card-icon">👥</div>
+                <div class="card-value">{{ assignments|length }}</div>
+                <div class="card-label">Total Drivers</div>
+            </div>
+            
+            <div class="dashboard-card total-trips">
+                <div class="card-icon">🚗</div>
+                <div class="card-value">{{ total_trips }}</div>
+                <div class="card-label">Total Trips</div>
+            </div>
+            
+            <div class="dashboard-card total-comp">
+                <div class="card-icon">💵</div>
+                <div class="card-value">₱{{ '%.2f'|format(total_comp) }}</div>
+                <div class="card-label">Total Compensation</div>
+            </div>
+            
+            <div class="dashboard-card avg-comp">
+                <div class="card-icon">📊</div>
+                <div class="card-value">₱{{ '%.2f'|format(avg_comp) }}</div>
+                <div class="card-label">Average Compensation</div>
+            </div>
         </div>
-        <div class="back-button" style="margin-top:32px;">
-            <a href="/" style="text-decoration:none;">
-                <button type="button" style="background:#333;color:#fff;padding:12px 28px;border-radius:6px;font-size:1rem;box-shadow:0 2px 8px rgba(44,62,80,0.08);border:none;cursor:pointer;">
-                    ← Back to Assignment
+        
+        <div class="chart-container">
+            <canvas id="compensationChart"></canvas>
+        </div>
+        
+        <div class="section-header">
+            <h2>Driver Assignment Details</h2>
+        </div>
+        
+        <div class="controls-container">
+            <div class="search-box">
+                <input type="text" id="driver-search" placeholder="Search drivers...">
+                <button onclick="searchDrivers()">Search</button>
+            </div>
+            
+            <div class="filter-options">
+                <select id="earnings-filter" onchange="filterDrivers()">
+                    <option value="all">All Earnings</option>
+                    <option value="high">High Earners</option>
+                    <option value="low">Low Earners</option>
+                    <option value="medium">Mid Earners</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="result-table" id="results-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Driver</th>
+                        <th scope="col">Assigned Trips</th>
+                        <th scope="col" onclick="sortByCompensation()">Total Compensation ↕</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body">
+                    {% for driver, trips in assignments.items() %}
+                    {% set comp = earnings[driver] %}
+                    <tr class="{% if comp == max_comp %}top-earner{% elif comp == min_comp %}low-earner{% endif %}" data-compensation="{{ comp }}">
+                        <th scope="row">{{ driver }}</th>
+                        <td>
+                            {% for trip in trips %}
+                                <span class="trip-badge">
+                                    {{ trip.location if trip.location is defined else trip }}
+                                    {% if trip.compensation is defined %}(₱{{ '%.2f'|format(trip.compensation) }}){% endif %}
+                                </span>
+                            {% else %}
+                                <span class="no-trips">None</span>
+                            {% endfor %}
+                        </td>
+                        <td class="comp-cell">₱{{ '%.2f'|format(comp) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination" id="pagination"></div>
+        
+        <div class="back-button">
+            <a href="/">
+                <button type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Assignment
                 </button>
             </a>
         </div>
     </div>
+    
+    <!-- Pass data from Flask to JavaScript through a data element -->
+    <div id="app-data" 
+         data-max-comp="{{ max_comp }}"
+         data-min-comp="{{ min_comp }}"
+         style="display:none;"></div>
+
+    <!-- Include the external JavaScript file -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <script src="/static/js/results.js"></script>
 </body>
 </html>

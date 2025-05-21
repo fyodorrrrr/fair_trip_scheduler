@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greedy Algorithm Demonstration</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/algorithm_demo.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Greedy Algorithm Demonstration</h1>
+        
+        <div class="algorithm-steps">
+            <h2>Step-by-Step Execution:</h2>
+            <ol>
+                {% for step in algorithm_steps %}
+                <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="compensationChart"></canvas>
+        </div>
+
+        <div class="chart-actions">
+            <button id="export-png" class="btn btn-sm">
+                <i class="icon">📥</i> Save as Image
+            </button>
+            <button id="export-csv" class="btn btn-sm">
+                <i class="icon">📊</i> Export Data
+            </button>
+        </div>
+
+        <div class="chart-help-tooltip" id="chart-help">
+            <div class="tooltip-icon">?</div>
+            <div class="tooltip-content">
+                <h4>Chart Interactions</h4>
+                <ul>
+                    <li><strong>Click</strong> on a bar to highlight driver details</li>
+                    <li><strong>Hover</strong> over bars to see exact values</li>
+                    <li>Use <strong>Export</strong> buttons to save chart or data</li>
+                </ul>
+                <button id="close-help" class="btn-sm">Got it</button>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="/" class="btn">Back to Driver List</a>
+            <a href="/compare-algorithms" class="btn">Compare Algorithms</a>
+            <a href="/about-algorithm" class="btn">About the Algorithm</a>
+        </div>
+    </div>
+    
+    <!-- Hidden element with chart data -->
+    <script id="chart-data" type="application/json">
+        {
+            "labels": {{ driver_names|tojson }},
+            "data": {{ compensations|tojson }},
+            "colors": {{ colors|tojson }}
+        }
+    </script>
+</body>
+</html>

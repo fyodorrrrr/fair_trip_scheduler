@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Greedy Algorithm</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ info.name }}</h1>
+        
+        <div class="algorithm-details">
+            <h2>Description</h2>
+            <p>{{ info.description }}</p>
+            
+            <h2>Complexity Analysis</h2>
+            <ul>
+                <li><strong>Time Complexity:</strong> {{ info.time_complexity }}</li>
+                <li><strong>Space Complexity:</strong> {{ info.space_complexity }}</li>
+            </ul>
+            
+            <h2>Advantages</h2>
+            <ul>
+                {% for advantage in info.advantages %}
+                <li>{{ advantage }}</li>
+                {% endfor %}
+            </ul>
+            
+            <h2>Disadvantages</h2>
+            <ul>
+                {% for disadvantage in info.disadvantages %}
+                <li>{{ disadvantage }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="pseudocode">
+            <h2>Pseudocode</h2>
+            <pre>
+function assignTripGreedy(drivers, trip):
+    minCompDriver = find driver with minimum compensation
+    assign trip to minCompDriver
+    update minCompDriver's compensation
+    return updated drivers list
+            </pre>
+        </div>
+        
+        <div class="academic-reference">
+            <h2>Academic Reference</h2>
+            <p>
+                The greedy approach used in this application is a specialized case of the
+                more general "load balancing" algorithms commonly used in distributed systems.
+                While simple, it has been proven to be effective for tasks where the goal is
+                to achieve equitable distribution of resources.
+            </p>
+            <p>
+                For further reading, see: Cormen, T. H., Leiserson, C. E., Rivest, R. L., & 
+                Stein, C. (2009). Introduction to Algorithms (3rd ed.). MIT Press.
+            </p>
+        </div>
+
+        <div class="navigation">
+            <a href="/" class="btn">Back to Driver List</a>
+            <a href="/algorithm-demo" class="btn">Algorithm Demo</a>
+            <a href="/compare-algorithms" class="btn">Compare Algorithms</a>
+        </div>
+    </div>
+</body>
+</html>
